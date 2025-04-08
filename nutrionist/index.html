@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Food Analysis</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-image: url('/Users/kumarsatyam/Desktop/hackathon/background.jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            height: 100vh;
+            width: 100vw;
+            overflow: hidden;
+            color: white;
+        }
+        .container {
+            max-width: 600px;
+            margin: auto;
+            text-align: center;
+            background-color: rgba(0, 0, 0, 0.5); /* Add a semi-transparent background to the container */
+            padding: 20px;
+            border-radius: 10px;
+            position: relative;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+        input[type="file"] {
+            display: block;
+            margin: 20px auto;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+        }
+        .result {
+            margin-top: 20px;
+            font-size: 18px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Food Analysis</h1>
+        <input type="file" id="imageInput" accept="image/*">
+        <button onclick="analyzeFood()">Analyze Food</button>
+        <div class="result" id="result"></div>
+    </div>
+
+    <script>
+        function analyzeFood() {
+            const input = document.getElementById('imageInput');
+            if (input.files.length === 0) {
+                alert('Please select an image file.');
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append('image', input.files[0]);
+
+            fetch('http://127.0.0.1:5000/analyze_food', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('result').innerText = data.response;
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('An error occurred while analyzing the food.');
+            });
+        }
+    </script>
+</body>
+</html>
